@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { loadProfile } from '../profile';
-import { bindActionCreators } from '../../../../Users/Melman/AppData/Local/Microsoft/TypeScript/3.1/node_modules/redux';
+import { bindActionCreators } from 'redux';
 
 function Home ({ history, loadProfile, profile }) {
     const [ login, setLogin ] = useState({ username: '', password: ''});
