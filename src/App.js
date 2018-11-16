@@ -8,12 +8,16 @@ import Login from './pages/Login';
 
 import { loadProfile } from './profile';
 
-function App({ history, location, loadProfile, profile, unauthorised }) {
+function App({ history, location, loadProfile, profileState, unauthorised }) {
+    console.debug('rerender');
 
     useEffect(() => {
-        console.debug('loading Profile...');
-        loadProfile();
-    }, [profile.loaded]);
+        console.debug('Checking Profile Loaded...', profileState);
+        if (!profileState.loaded && !profileState.loading) {
+            console.debug('Going to load the profile');
+            loadProfile();
+        }
+    }, [profileState.startLoad]);
 
     // if (profile.loading) {
     //     logger.debug('Waiting for profile to load...');
@@ -35,7 +39,7 @@ function App({ history, location, loadProfile, profile, unauthorised }) {
 
 const mapStateToProps = state => ({
     unauthorised: state.unauthorised,
-    profile: state.profile
+    profileState: state.profile
 });
 const mapDispatchToProps = dispatch => ({
     loadProfile: bindActionCreators(loadProfile, dispatch)

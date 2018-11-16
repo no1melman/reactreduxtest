@@ -3,6 +3,7 @@ import { unauthorised, success } from '../apiRedux';
 export const LOAD_PROFILE = 'LOAD_PROFILE';
 export const LOAD_PROFILE_SUCCESS = 'LOAD_PROFILE_SUCCESS';
 export const LOAD_PROFILE_FAILURE = 'LOAD_PROFILE_FAILURE';
+export const START_PROFILE_LOAD = 'START_PROFILE_LOAD';
 
 let counter = 0;
 
@@ -20,7 +21,7 @@ export function loadProfile() {
                     dispatch(loadProfileFailure());
                 } else {
                     dispatch(success());
-                    dispatch(loadProfileSuccess());
+                    dispatch(loadProfileSuccess({}));
                 }
 
                 counter ++;
@@ -29,6 +30,10 @@ export function loadProfile() {
 
         });
     };
+}
+
+export function startProfileLoad() {
+    return { type: START_PROFILE_LOAD };
 }
 
 export function loadProfileSuccess(profile) {
@@ -40,6 +45,7 @@ export function loadProfileFailure() {
 }
 
 const initialState = {
+    startLoad: false,
     loading: false,
     loaded: false,
     profile: {}
@@ -58,6 +64,14 @@ export function profileReducer(state = initialState, action) {
     if (action.type === LOAD_PROFILE_FAILURE) {
         return { loading: false, loaded: false, profile: {} };
     }
+
+    if (action.type === START_PROFILE_LOAD) {
+        return {
+            ...state,
+            startLoad: !state.startLoad
+        };
+    }
+
 
     return state;
 }

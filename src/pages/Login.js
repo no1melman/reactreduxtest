@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { loadProfile } from '../profile';
+import { startProfileLoad } from '../profile';
 import { bindActionCreators } from 'redux';
+import { Redirect } from 'react-router-dom';
+import { login } from '../login';
 
-function Home ({ history, loadProfile, profile }) {
+function Home ({ history, startProfileLoad, loginAction, loginState }) {
     const [ login, setLogin ] = useState({ username: '', password: ''});
 
     function handleChange(e) {
@@ -13,11 +15,13 @@ function Home ({ history, loadProfile, profile }) {
     function handleClick(e) {
         e.preventDefault();
 
-        loadProfile();
+        loginAction();
     }
 
-    if (profile.loaded) {
-        history.push('/');
+    if (loginState.loggedIn) {
+        console.debug('Going home');
+        startProfileLoad();
+        return <Redirect to='/' />;
     }
 
     return (
@@ -35,4 +39,9 @@ function Home ({ history, loadProfile, profile }) {
     );
 }
 
-export default connect(state => ({ profile: state.profile }), dispatch => ({ loadProfile: bindActionCreators(loadProfile, dispatch) }))(Home);
+export default connect(state => ({ 
+    loginState: state.login
+}), dispatch => ({ 
+    startProfileLoad: bindActionCreators(startProfileLoad, dispatch),
+    loginAction: bindActionCreators(login, dispatch)
+}))(Home);
